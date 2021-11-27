@@ -57,7 +57,12 @@
       <form class="d-flex">
         <input class="form-control me-2" name="searchParams" [(ngModel)]="searchParams" type="search" placeholder="Search for a Restaurant here...."
           aria-label="Search">
-        <button class="btn btn-outline-success" (click)="searchRestaurant()" type="button">Search</button>
+        <button *ngIf="processing_search" class="btn btn-outline-success" (click)="searchRestaurant()"
+          type="button">Search</button>
+        <button *ngIf="!processing_search" class="btn btn-outline-success" type="button" disabled>
+          <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+          <span class="visually-hidden">Loading...</span>
+        </button>
       </form>
     </div>
   </div>
@@ -73,20 +78,27 @@
       <div class="col-md-10 mx-auto col-lg-5">
         <form class="p-4 p-md-5 border rounded-3 bg-light">
           <div class="form-floating mb-3">
-            <select class="form-select form-select-sm" name="location" [(ngModel)]="locationParams" aria-label=".form-select-sm example">
+            <select class="form-select form-select-sm" name="location" [(ngModel)]="locationParams"
+              aria-label=".form-select-sm example" required>
               <option value="" selected>Select Location</option>
               <option *ngFor="let location of locations" value="{{location.slug}}">{{location?.name}}</option>
 
             </select>
           </div>
           <div class="form-floating mb-3">
-            <select class="form-select form-select-sm" name="cuisine" [(ngModel)]="cuisineParams" aria-label=".form-select-sm example">
+            <select class="form-select form-select-sm" name="cuisine" [(ngModel)]="cuisineParams"
+              aria-label=".form-select-sm example" required>
               <option value="" selected>Select a Cuisine</option>
               <option *ngFor="let cuisine of cuisines" value="{{cuisine.slug}}">{{cuisine?.name}}</option>
             </select>
           </div>
 
-          <button class="w-100 btn btn-lg btn-primary" type="button" (click)="RestaurantCuisine()">Search</button>
+          <button *ngIf="processing" class="w-100 btn btn-lg btn-primary" type="button"
+            (click)="RestaurantCuisine()">Search</button>
+          <button *ngIf="!processing" class="w-100 btn btn-lg btn-primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
           <hr class="my-4">
           <small class="text-muted">Select at least one option (location or cuisine or both) to see restaurants
             result.</small>
@@ -210,7 +222,11 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
-      <button type="button" class="btn btn-primary" (click)="book()">Book</button>
+      <button *ngIf="processing_search" type="button" class="btn btn-primary" (click)="book()">Book</button>
+      <button *ngIf="!processing_search" class="btn btn-primary" type="button" disabled>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        <span class="visually-hidden">Loading...</span>
+      </button>
     </div>
 
   

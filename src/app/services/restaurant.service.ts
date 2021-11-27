@@ -10,8 +10,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class RestaurantService {
 
   
-  private APIUrl ='http://54.144.74.77/api'
+  // private APIUrl ='http://54.144.74.77/api'
   // private APIUrl =  'http://localhost:5000/api'
+  private APIUrl = 'https://restaurant-listing-app.herokuapp.com/api'
 
   constructor(
     private http: HttpClient,

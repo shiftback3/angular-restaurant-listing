@@ -7,6 +7,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 
 
 import {Observable} from 'rxjs';
+import { Alert } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import {Observable} from 'rxjs';
   providers: [RestaurantService, DecimalPipe]
 })
 export class AppComponent implements  OnInit{
-
+processing = true
+processing_search = true
   searchParams = ''
   locationParams = ''
   cuisineParams = ''
@@ -91,16 +93,21 @@ console.log(this.cuisines)
     )
   }
   searchRestaurant(){
-    
+    this.processing_search = false
     this._service.search(this.searchParams)
     .subscribe(
       res =>{
  this.collectionSize = res.response.length;
 this.restaurants = res.response
 this.refreshRestaurants()
+this.processing_search = true
+if(res.response.length < 1){
+  alert('No Result Found!')
+}
 console.log(res)
       },
       err => {
+        this.processing_search = true
         console.log(err)
       }
     )
@@ -108,6 +115,11 @@ console.log(res)
   }
 
   RestaurantCuisine(){
+    this.processing = false
+    if((this.locationParams =='') && (this.cuisineParams =='')){
+alert('Please select one field at least')
+this.processing = true
+    }
     if((this.locationParams !='') && (this.cuisineParams !='')){
     this._service.advanceSearch(this.locationParams,this.cuisineParams)
     .subscribe(
@@ -115,10 +127,15 @@ console.log(res)
  this.collectionSize = res.response.length;
 this.restaurants = res.response
 this.refreshRestaurants()
+this.processing = true
+if(res.response.length < 1){
+  alert('No Result Found!')
+}
 console.log(res)
       },
       err => {
         console.log(err)
+        this.processing = true
       }
     )
     }
@@ -129,10 +146,15 @@ console.log(res)
    this.collectionSize = res.response.length;
   this.restaurants = res.response
   this.refreshRestaurants()
+  this.processing = true
+  if(res.response.length < 1){
+    alert('No Result Found!')
+  }
   console.log(res)
         },
         err => {
           console.log(err)
+          this.processing = true
         }
       )
       }
@@ -144,10 +166,15 @@ console.log(res)
      this.collectionSize = res.response.length;
     this.restaurants = res.response
     this.refreshRestaurants()
+    this.processing = true
+    if(res.response.length < 1){
+      alert('No Result Found!')
+    }
     console.log(res)
           },
           err => {
             console.log(err)
+            this.processing = true
           }
         )
         }
@@ -166,18 +193,20 @@ console.log(res)
   }
   book(){
 
-    
+    this.processing = false
     
     // this.restaurantDetails 
     this.booking.addControl('restaurant_id', new FormControl(this.restaurantDetails._id, Validators.required));
     this._service.Book(this.booking.value)
     .subscribe(
       res =>{
-alert('Booking Successful!')
+        this.processing = true
+alert('Booking Successful, check email for details!')
 
 console.log(res)
       },
       err => {
+        this.processing = true
         console.log(err)
       }
     )
